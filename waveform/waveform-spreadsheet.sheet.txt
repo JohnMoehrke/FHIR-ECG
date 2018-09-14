@@ -1,0 +1,266 @@
+﻿
+=== Sheet Bindings =====================================
+
+ -- Row 1 -----------------------------------
+  Binding Name = MetricUnit
+  Binding = reference
+  Reference = https://rtmms.nist.gov/rtmms/index.htm#!units
+  Definition = Describes the unit of metric
+  Description = IEEE 11073-10101
+  Conformance = preferred
+
+ -- Row 2 -----------------------------------
+  Binding Name = BodySite
+  Binding = value set
+  Reference = http://hl7.org/fhir/ValueSet/body-site
+  Definition = Codes describing anatomical locations.
+  Description = SNOMED CT Body site concepts
+  Conformance = example
+
+ -- Row 3 -----------------------------------
+  Binding Name = TechnicalErrorConditions
+  Binding = reference
+  Reference = https://rtmms.nist.gov/rtmms/index.htm#!technicalErrorConditions
+  Definition = Technical Error Conditions
+  Description = IEEE 11073-10101
+  Conformance = preferred
+
+ -- Row 4 -----------------------------------
+  Binding Name = FilterTypes
+  Binding = reference
+  Reference = https://rtmms.nist.gov/rtmms/index.htm#!FilterTypes
+  Definition = Filter types
+  Description = IEEE 11073-10101
+  Conformance = preferred
+
+ -- Row 5 -----------------------------------
+  Binding Name = FIlterSequence
+  Binding = reference
+  Reference = https://rtmms.nist.gov/rtmms/index.htm#!FilterSequence
+  Definition = Filter Sequence
+  Description = IEEE 11073-10101
+  Conformance = preferred
+
+ -- Row 6 -----------------------------------
+  Binding Name = MarkersEvents
+  Binding = reference
+  Reference = https://rtmms.nist.gov/rtmms/index.htm#!MarkersEvents
+  Definition = Markers and Events
+  Description = IEEE 11073-10101
+  Conformance = preferred
+
+=== Sheet Invariants =====================================
+
+=== Sheet Data Elements =====================================
+
+ -- Row 1 -----------------------------------
+  Element = WaveForm
+  Type = DomainResource
+  Short Label = Waveform measurement
+  Definition = Representation of a waveform measurement on a patient, For Example: ECG.
+  Comments = IEEE 11073-10201 is the DIM
+  w5 = clinical.diagnostics
+
+ -- Row 2 -----------------------------------
+  Element = WaveForm.patient
+  Card. = 1..1
+  Type = Reference(Patient)
+  Short Label = Who the waveform is about
+  w5 = who.focus
+
+ -- Row 3 -----------------------------------
+  Element = WaveForm.identifier
+  Card. = 0..*
+  Type = Identifier
+  Short Label = Other identifiers for this waveform
+  w5 = id
+
+ -- Row 4 -----------------------------------
+  Element = WaveForm.order
+  Card. = 0..*
+  Type = Reference(DiagnosticOrder)
+  Short Label = Order
+  Definition = The order for this waveform result.
+
+ -- Row 5 -----------------------------------
+  Element = WaveForm.period
+  Card. = 0..1
+  Type = Period
+  Short Label = Time sample was taken
+  Definition = The start and end time of the complete waveform.
+
+ -- Row 6 -----------------------------------
+  Element = WaveForm.data
+  Card. = 0..*
+  Short Label = Waveform data
+  Definition = The data measured.
+
+ -- Row 7 -----------------------------------
+  Element = WaveForm.data.values
+  Card. = 1..*
+  Type = decimal
+  Short Label = Waveform values
+  Definition = The measurement values.
+  To Do = unclear if this should be decimal or signed-integer. Also unclear if more data elements are needed for other types
+
+ -- Row 8 -----------------------------------
+  Element = WaveForm.data.units
+  Card. = 1..1
+  Type = Coding
+  Binding = MetricUnit
+  Short Label = Measurement units
+  Definition = Units of measure of the measurement values.
+
+ -- Row 9 -----------------------------------
+  Element = WaveForm.data.site
+  Card. = 0..*
+  Type = Coding
+  Binding = BodySite
+  Short Label = Where taken
+  Definition = Where this measurement was taken.
+
+ -- Row 10 -----------------------------------
+  Element = WaveForm.data.timeSpan
+  Card. = 0..1
+  Type = Period
+  Short Label = Period for bounded waveforms
+  Definition = Period within the waveform described by this datum.
+
+ -- Row 11 -----------------------------------
+  Element = WaveForm.data.techCond
+  Card. = 0..*
+  Type = Coding
+  Binding = TechnicalErrorConditions
+  Short Label = Technical error condition
+  Definition = Known errors in data (Inop, Out of Range-High, Out of Range-Low, Disconnected, error).
+
+ -- Row 12 -----------------------------------
+  Element = WaveForm.data.sampleRate
+  Card. = 1..1
+  Type = integer
+  Short Label = Number of samples per unit time
+  Definition = Unit of measurement per sample value.
+
+ -- Row 13 -----------------------------------
+  Element = WaveForm.data.resolution
+  Card. = 0..1
+  Type = integer
+  Short Label = Measurement resolution
+  Definition = The resolution of the waveform data stream is the nominal value thhat corresponds to one unit in the waveform data.
+  Comments = This can be traced directly to the least significant bit of the ADC, or some other conversion can be used.
+  To Do = does a Coding work?
+
+ -- Row 14 -----------------------------------
+  Element = WaveForm.data.encoding
+  Card. = 0..1
+  Type = string
+  Short Label = Encoding used
+  Definition = Waveform encoding specification.
+  To Do = seems FHIR should just stick with decimal and if other types are used they are extensions.
+
+ -- Row 15 -----------------------------------
+  Element = WaveForm.data.range
+  Card. = 0..1
+  Type = Period
+  Short Label = Sample range
+  Definition = Time range for this sample.
+
+ -- Row 16 -----------------------------------
+  Element = WaveForm.data.filter
+  Card. = 0..*
+  Short Label = Filter applied to the data
+  Definition = When a filter is applied to the data.
+
+ -- Row 17 -----------------------------------
+  Element = WaveForm.data.filter.type
+  Card. = 1..1
+  Type = Coding
+  Binding = FilterTypes
+  Short Label = Containment hierarchy
+  Definition = The Containment hierarchy (FIR, IIR, Chebyshev, Kalman).
+
+ -- Row 18 -----------------------------------
+  Element = WaveForm.data.filter.sequence
+  Card. = 0..1
+  Type = Coding
+  Binding = FIlterSequence
+  Short Label = Filter Sequence type
+  Definition = Order at cutoff frequency.
+
+ -- Row 19 -----------------------------------
+  Element = WaveForm.data.filter.frequency
+  Card. = 0..1
+  Type = Ratio
+  Short Label = Filter frequency
+  Definition = The Filter frequency value in Hz.
+
+ -- Row 20 -----------------------------------
+  Element = WaveForm.display
+  Card. = 0..*
+  Short Label = Display attributes
+  Definition = Used for displaying the data.
+
+ -- Row 21 -----------------------------------
+  Element = WaveForm.display.sweepSpeed
+  Card. = 0..1
+  Type = Quantity
+  Short Label = Display sweep speed
+  Definition = The Display sweep speed usually in mm/sec.
+
+ -- Row 22 -----------------------------------
+  Element = WaveForm.display.grid
+  Card. = 0..*
+  Type = integer
+  Short Label = Horizontal position
+  Definition = The horizontal position as a series of data counts.
+
+ -- Row 23 -----------------------------------
+  Element = WaveForm.display.color
+  Card. = 0..1
+  Type = string
+  Short Label = Color for line
+  Definition = Color for the line in RGB.
+
+ -- Row 24 -----------------------------------
+  Element = WaveForm.display.scale
+  Card. = 0..1
+  Type = Range
+  Short Label = Display scale range
+  Definition = Lowest value and higest value for the display scale of a scaled waveform.
+  Comments = For example the displayed scale for an Arterial Blood Pressure may range from a\nlow value of -30 mmHg to a high value of +270 mmHg. There is no requirement on the\nconsumer to use the specified scale ranges.
+
+ -- Row 25 -----------------------------------
+  Element = WaveForm.display.physicalRange
+  Card. = 0..1
+  Type = Range
+  Short Label = Physiological range
+  Definition = Range of expected physiological values for the waveform.
+  Comments = For example the while the displayed scale for an Arterial Blood Pressure may range from a low\nvalue of -30 mmHg to a high value of +270 mmHg, the physiological range could be -40 to +350\nmmHg.
+
+ -- Row 26 -----------------------------------
+  Element = WaveForm.markers
+  Card. = 0..*
+  Short Label = Additional Markers and Events
+  Definition = Events and Markers.
+
+ -- Row 27 -----------------------------------
+  Element = WaveForm.markers.events
+  Card. = 0..*
+  Type = Coding
+  Binding = MarkersEvents
+  Short Label = Markers and events
+  Definition = Instantaneous events and markers that occur in the waveform.
+  Comments = Examples include Pace Pulse, Start of Breath, J-Point, Start of Asystole, etc. Possible event\ntypes are documented in Tables A.9.2.1 and A.9.3.1 of IEEE 11073-10101.
+
+=== Sheet Search =====================================
+
+ -- Row 1 -----------------------------------
+  Name = patient
+  Type = reference
+  Path = WaveForm.patient
+
+=== Sheet Profiles =====================================
+
+=== Sheet Examples =====================================
+
+=== Sheet Examples =====================================
